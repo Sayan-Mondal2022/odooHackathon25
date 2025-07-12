@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}{{ question.title }} - StackIt{% endblock %}
+
+{% block content %}
+<div class="question-container">
+    <h1>{{ question.title }}</h1>
+    
+    <div class="question-meta">
+        <span>Asked by {{ question.author.username }}</span>
+        <span>{{ question.created_at|date:"M d, Y" }}</span>
+    </div>
+    
+    <div class="question-content">
+        {{ question.description|safe }}
+    </div>
+    
+    <div class="question-tags">
+        {% for tag in question.get_tags_list %}
+            <span class="tag">{{ tag }}</span>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

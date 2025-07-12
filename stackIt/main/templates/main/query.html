@@ -1,0 +1,220 @@
+{% extends "main/base.html" %}
+
+{% block title %}Ask Question - StackIt{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.snow.css">
+<style>
+    .ask-question-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: var(--dark);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--light-2);
+        border-radius: 4px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    }
+
+    #editor {
+        height: 300px;
+        margin-bottom: 1rem;
+    }
+
+    .tag-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .tag {
+        background: var(--primary-light);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .tag-remove {
+        margin-left: 0.5rem;
+        cursor: pointer;
+    }
+
+    .submit-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin-top: 1rem;
+        display: block; /* Add this */
+    width: auto; /* Add this */
+    }
+
+    .submit-btn:hover {
+    background: var(--primary-dark);
+    opacity: 0.9; /* Optional hover effect */
+}
+
+    .ql-toolbar {
+        border-radius: 4px 4px 0 0;
+        border-color: var(--light-2) !important;
+    }
+
+    .ql-container {
+        border-radius: 0 0 4px 4px;
+        border-color: var(--light-2) !important;
+        font-family: inherit;
+    }
+
+    .ql-editor {
+        min-height: 200px;
+        font-size: 1rem;
+    }
+
+    .ask-question-container {
+    /* Your existing styles */
+    position: relative; /* Add this */
+    overflow: visible; /* Add this */
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ask-question-container">
+    <h1>Ask Question</h1>
+    
+    <form id="question-form" method="POST" action="{% url 'query' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="question-title">Title</label>
+            <input type="text" id="question-title" name="title" class="form-control" placeholder="What's your question?" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="question-description">Description</label>
+            <div id="editor"></div>
+            <input type="hidden" id="description-content" name="description">
+        </div>
+        
+        <div class="form-group">
+            <label for="question-tags">Tags</label>
+            <input type="text" id="question-tags" class="form-control" placeholder="Add tags (separated by commas)">
+            <div class="tag-container" id="tags-container"></div>
+            <input type="hidden" id="tags-content" name="tags">
+        </div>
+        
+        <button type="submit" class="submit-btn">Submit Question</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.0/dist/quill.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Quill rich text editor
+        const quill = new Quill('#editor', {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['link', 'image', 'code-block'],
+                    ['clean']
+                ]
+            },
+            placeholder: 'Describe your question in detail...'
+        });
+
+        // Tags functionality
+        const tagsInput = document.getElementById('question-tags');
+        const tagsContainer = document.getElementById('tags-container');
+        const tagsHiddenInput = document.getElementById('tags-content');
+        let tags = [];
+        
+        tagsInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const tag = this.value.trim();
+                if (tag && !tags.includes(tag)) {
+                    tags.push(tag);
+                    renderTags();
+                }
+                this.value = '';
+            }
+        });
+        
+        function renderTags() {
+            tagsContainer.innerHTML = '';
+            tags.forEach((tag, index) => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag';
+                tagEl.innerHTML = `
+                    ${tag}
+                    <span class="tag-remove" data-index="${index}">&times;</span>
+                `;
+                tagsContainer.appendChild(tagEl);
+            });
+            tagsHiddenInput.value = tags.join(',');
+        }
+        
+        tagsContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('tag-remove')) {
+                const index = parseInt(e.target.dataset.index);
+                tags.splice(index, 1);
+                renderTags();
+            }
+        });
+        
+        // Form submission
+        const form = document.getElementById('question-form');
+        form.addEventListener('submit', function(e) {
+            // Set the hidden input value to the HTML content
+            const descriptionEl = document.getElementById('description-content');
+            descriptionEl.value = quill.root.innerHTML;
+            
+            // Validate at least one tag is present
+            if (tags.length === 0) {
+                e.preventDefault();
+                alert('Please add at least one tag');
+                tagsInput.focus();
+            }
+        });
+    });
+</script>
+{% endblock %}

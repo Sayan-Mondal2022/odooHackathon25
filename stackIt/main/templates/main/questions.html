@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{%block title %} {% endblock title %}
+
+{% block content %}
+  <header>
+    <h1>StackIt</h1>
+    <nav>
+      <a href="#">Home</a>
+      <div class="profile-icon"></div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="#">Question</a> &gt; How to join 2...
+    </div>
+
+    <section class="question-section">
+      <h2>How to join 2 columns in a data set to make a separate column in SQL</h2>
+      <div class="tags">
+        <span class="tag">Tags</span>
+        <span class="tag">Tags</span>
+      </div>
+      <p class="question-description">
+        I do not know the code for it as I am a beginner. As an example what I need to do is like there is a column 1 containing First name and column 2 consists of last name I want a column to combine.
+      </p>
+    </section>
+
+    <section class="answers">
+      <h3>Answers</h3>
+
+      <div class="answer">
+        <div class="vote">
+          <button class="upvote">▲</button>
+          <span>1</span>
+          <button class="downvote">▼</button>
+        </div>
+        <div class="answer-text">
+          <p>The || Operator.</p>
+          <p>The + Operator.</p>
+          <p>The CONCAT Function.</p>
+        </div>
+      </div>
+
+      <div class="answer">
+        <div class="vote">
+          <button class="upvote">▲</button>
+          <span>0</span>
+          <button class="downvote">▼</button>
+        </div>
+        <div class="answer-text">
+          <p>Details</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="submit-answer">
+      <h3>Submit Your Answer</h3>
+      <textarea placeholder="Type your answer here..."></textarea>
+      <button class="submit-btn">Submit</button>
+    </section>
+  </main>
+
+{% endblock content %}
+

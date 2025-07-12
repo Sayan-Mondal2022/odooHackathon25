@@ -1,0 +1,135 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock title %} 
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+{% endblock style %}
+
+{% block content %}
+    
+    <main class="main-content">
+        <div class="container">
+            <div class="sidebar">
+                <div class="sidebar-section">
+                    <h3>Home</h3>
+                    <ul>
+                        <li><a href="#" class="active">Questions</a></li>
+                        <li><a href="#">Tags</a></li>
+                        <li><a href="#">Users</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Filters</h3>
+                    <ul>
+                        <li><a href="#">Newest</a></li>
+                        <li><a href="#">Unanswered</a></li>
+                        <li><a href="#">Most Votes</a></li>
+                    </ul>
+                </div>
+                <div class="sidebar-section">
+                    <h3>Tags</h3>
+                    <div class="popular-tags">
+                        <a href="#" class="tag">javascript</a>
+                        <a href="#" class="tag">python</a>
+                        <a href="#" class="tag">django</a>
+                        <a href="#" class="tag">sql</a>
+                        <a href="#" class="tag">react</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="content-header">
+                    <h1>All Questions</h1>
+                    <a href="{% url "query" %}" class="btn btn-primary">Ask Question</a>
+                </div>
+
+                <div class="search-bar">
+                    <input type="text" placeholder="Search...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+
+                <div class="question-list">
+                    <!-- Question 1 -->
+                    <div class="question">
+                        <div class="question-stats">
+                            <div class="votes">
+                                <span>5</span>
+                                <small>votes</small>
+                            </div>
+                            <div class="answers answered">
+                                <span>2</span>
+                                <small>answers</small>
+                            </div>
+                            <div class="views">
+                                <span>45</span>
+                                <small>views</small>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            <h3><a href="question.html">How to join 2 columns in a data set to make a separate column in SQL</a></h3>
+                            <p class="excerpt">I do not know the code for it as I am a beginner. As an example what I need to do is like there is a column 1 containing First name, and column 2 consists of last name I want a column to combine...</p>
+                            <div class="tags">
+                                <a href="#" class="tag">sql</a>
+                                <a href="#" class="tag">database</a>
+                                <a href="#" class="tag">join</a>
+                            </div>
+                            <div class="question-meta">
+                                <span class="user">Asked by <a href="#">user123</a></span>
+                                <span class="time">2 hours ago</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question">
+                        <div class="question-stats">
+                            <div class="votes">
+                                <span>12</span>
+                                <small>votes</small>
+                            </div>
+                            <div class="answers accepted">
+                                <span>4</span>
+                                <small>answers</small>
+                            </div>
+                            <div class="views">
+                                <span>102</span>
+                                <small>views</small>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            <h3><a href="question.html">How to implement authentication in Django?</a></h3>
+                            <p class="excerpt">I'm building a web application with Django and need to add user authentication. What are the best practices for implementing secure authentication in Django projects?</p>
+                            <div class="tags">
+                                <a href="#" class="tag">django</a>
+                                <a href="#" class="tag">python</a>
+                                <a href="#" class="tag">authentication</a>
+                            </div>
+                            <div class="question-meta">
+                                <span class="user">Asked by <a href="#">new_dev</a></span>
+                                <span class="time">1 day ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pagination">
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link">4</a>
+                    <a href="#" class="page-link">5</a>
+                    <a href="#" class="page-link next">Next</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 StackIt. All rights reserved.</p>
+        </div>
+    </footer>
+{% endblock content %}
+
